@@ -7,3 +7,17 @@ services:
       - "8080:80" # Map host port 8080 to container port 80
     container_name: android-web-installer
     restart: unless-stopped
+    volumes:
+      # For public/releases/index.json - runtime modifiable
+      - ./public/releases/index.json:/usr/share/nginx/html/releases/index.json:ro
+      # For public/favicon.png - runtime modifiable
+      - ./public/favicon.png:/usr/share/nginx/html/favicon.png:ro
+      # For src/config.js - BEWARE: Changes here require a Docker image rebuild
+      # as this file is part of the application's build process.
+      # This mount makes it accessible on the host but doesn't enable true runtime hot-reloading of its logic.
+      # Changes to this file require rebuilding the Docker image (`docker compose build`).
+      - ./src/config.js:/app/src/config.js:ro
+    environment:
+      VUE_APP_OS_NAME: "ProtonAOSP"
+      VUE_APP_OS_DESC: "a minimal custom Android ROM focused on UI/UX and performance with a touch of privacy"
+      # Add other VUE_APP_* variables here if needed for runtime configuration

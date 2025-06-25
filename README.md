@@ -55,6 +55,26 @@ To stop the application, press `Ctrl+C` in the terminal where `docker-compose up
 docker-compose down
 ```
 
+### Configuration when using Docker
+
+When running with Docker, configuration is managed as follows:
+
+*   **`public/releases/index.json`**: This file provides the list of available releases. It is volume-mounted from `./public/releases/index.json` on your host machine to `/usr/share/nginx/html/releases/index.json` in the container (read-only). Changes to the local file will be reflected in the running application.
+*   **`public/favicon.png`**: The site favicon. It is volume-mounted from `./public/favicon.png` on your host machine to `/usr/share/nginx/html/favicon.png` in the container (read-only). Changes to the local file will be reflected (you might need to clear your browser cache).
+*   **`src/config.js`**: This file contains core application JavaScript configuration. It is volume-mounted from `./src/config.js` on your host to `/app/src/config.js` in the container (read-only).
+    *   **Important**: `src/config.js` is part of the application's build process. Any changes made to this file on your host **require the Docker image to be rebuilt** to take effect. Use the command: `docker compose build web-installer` (or `docker compose up --build`).
+*   **Environment Variables (formerly `.env` settings)**: Application settings previously in `.env` (like `VUE_APP_OS_NAME` and `VUE_APP_OS_DESC`) are now configured directly in the `docker-compose.yml` file under the `environment` section for the `web-installer` service.
+    ```yaml
+    services:
+      web-installer:
+        # ... other settings
+        environment:
+          VUE_APP_OS_NAME: "Your OS Name"
+          VUE_APP_OS_DESC: "Your OS Description"
+          # Add other VUE_APP_* variables here
+    ```
+    Modify these values in `docker-compose.yml` and restart the container (`docker compose up -d --force-recreate`) for changes to take effect. If new variables are added that the application code expects from `process.env`, ensure they are prefixed with `VUE_APP_` for Vue CLI projects to pick them up during the build process if they are to be statically embedded. For runtime environment variables, the application must be coded to use `process.env.VARIABLE_NAME` directly.
+
 ## Contributing
 
 Contributions are welcome! If you adapt this installer or make other improvements to it, please contribute the improvements back to the official repository instead of forking it and keeping the changes to yourself. There are many rough edges that need to be improved upon.
