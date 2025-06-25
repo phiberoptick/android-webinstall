@@ -33,6 +33,28 @@ You can start with the following Yarn commands:
 
 All configuration is in `src/config.js` and `.env`, and the release index at `public/releases/index.json` is fetched from the root of the domain hosting the installer. You may also want to change the favicon at `public/favicon.png`.
 
+## Running with Docker (Recommended for Deployment)
+
+This project can be easily run using Docker and Docker Compose for consistent environments and simplified deployment.
+
+1.  **Ensure Docker and Docker Compose are installed.**
+    *   [Install Docker](https://docs.docker.com/get-docker/)
+    *   [Install Docker Compose](https://docs.docker.com/compose/install/)
+
+2.  **Build and run the application:**
+    ```bash
+    docker-compose up --build
+    ```
+    This command will build the Docker image (if it doesn't exist or if changes were made) and start the service.
+
+3.  **Access the application:**
+    Open your web browser and navigate to `http://localhost:8080`.
+
+To stop the application, press `Ctrl+C` in the terminal where `docker-compose up` is running, and then run:
+```bash
+docker-compose down
+```
+
 ## Contributing
 
 Contributions are welcome! If you adapt this installer or make other improvements to it, please contribute the improvements back to the official repository instead of forking it and keeping the changes to yourself. There are many rough edges that need to be improved upon.
